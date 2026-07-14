@@ -88,7 +88,7 @@ export interface MonitorSettings {
 export const DEFAULT_SETTINGS: MonitorSettings = {
   pollIntervalMs: 5000,
   maxSegments: 2000,
-  useCorsProxy: true,
+  useCorsProxy: false,
   autoStart: false,
   alertOnSignal: true,
   showOnlySignals: false,
@@ -96,6 +96,6 @@ export const DEFAULT_SETTINGS: MonitorSettings = {
 
 export const STORAGE_KEYS = {
   manifestUrl: 'scte35-monitor:manifest-url',
-  settings: 'scte35-monitor:settings',
+  settings: 'scte35-monitor:settings-v2',
   selectedVariant: 'scte35-monitor:selected-variant',
 } as const;

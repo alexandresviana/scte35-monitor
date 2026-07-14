@@ -7,7 +7,6 @@ import { VariantSelector } from './components/VariantSelector';
 import { SegmentList } from './components/SegmentList';
 import { EventLog } from './components/EventLog';
 import { SettingsPanel } from './components/SettingsPanel';
-import { ProxyStatusBanner } from './components/ProxyStatusBanner';
 import { useHlsPlayer } from './hooks/useHlsPlayer';
 import { useManifestMonitor } from './hooks/useManifestMonitor';
 import type { MonitorSettings, SegmentFilter, Scte35Event } from './types';
@@ -158,8 +157,6 @@ function App() {
                 {displayError}
               </div>
             )}
-
-            <ProxyStatusBanner />
 
             <StatsPanel stats={stats} />
           </div>

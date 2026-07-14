@@ -1,3 +1,5 @@
+import { cpSync } from 'node:fs';
+import { join } from 'node:path';
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 
@@ -41,8 +43,21 @@ function corsProxyPlugin(): Plugin {
   };
 }
 
+function cloudflareWorkerPlugin(): Plugin {
+  return {
+    name: 'cloudflare-worker',
+    apply: 'build',
+    closeBundle() {
+      cpSync(
+        join(process.cwd(), 'cloudflare', '_worker.js'),
+        join(process.cwd(), 'dist', '_worker.js')
+      );
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), corsProxyPlugin()],
+  plugins: [react(), corsProxyPlugin(), cloudflareWorkerPlugin()],
   optimizeDeps: {
     exclude: ['lucide-react'],
   },

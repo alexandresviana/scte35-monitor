@@ -1,11 +1,30 @@
-export async function onRequestOptions() {
-  return new Response(null, {
-    headers: corsHeaders(),
-  });
-}
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Accept',
+};
 
-export async function onRequestGet(context) {
-  const requestUrl = new URL(context.request.url);
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+
+    if (url.pathname === '/proxy') {
+      if (request.method === 'OPTIONS') {
+        return new Response(null, { headers: CORS_HEADERS });
+      }
+
+      if (request.method === 'GET') {
+        return handleProxy(url);
+      }
+
+      return textResponse('Method not allowed', 405);
+    }
+
+    return env.ASSETS.fetch(request);
+  },
+};
+
+async function handleProxy(requestUrl) {
   const target = requestUrl.searchParams.get('url');
 
   if (!target) {
@@ -45,7 +64,7 @@ export async function onRequestGet(context) {
     return new Response(body, {
       status: 200,
       headers: {
-        ...corsHeaders(),
+        ...CORS_HEADERS,
         'Content-Type':
           response.headers.get('content-type') ?? 'application/vnd.apple.mpegurl',
         'Cache-Control': 'no-store',
@@ -57,19 +76,11 @@ export async function onRequestGet(context) {
   }
 }
 
-function corsHeaders() {
-  return {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Accept',
-  };
-}
-
 function textResponse(message, status) {
   return new Response(message, {
     status,
     headers: {
-      ...corsHeaders(),
+      ...CORS_HEADERS,
       'Content-Type': 'text/plain; charset=utf-8',
     },
   });

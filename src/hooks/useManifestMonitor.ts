@@ -118,8 +118,10 @@ export function useManifestMonitor({
       const extracted = extractVariants(content, manifestUrl);
       setVariants(extracted);
       setError(null);
-    } catch {
-      setError('Falha ao buscar master playlist. Verifique a URL ou ative o proxy CORS.');
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Falha ao buscar master playlist.';
+      setError(message);
     } finally {
       setIsFetching(false);
     }
@@ -142,8 +144,10 @@ export function useManifestMonitor({
       updateHistoricalSegments(merged.segments);
       setLastUpdate(new Date());
       setError(null);
-    } catch {
-      setError('Falha ao buscar variant playlist.');
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : 'Falha ao buscar variant playlist.';
+      setError(message);
     } finally {
       setIsFetching(false);
     }

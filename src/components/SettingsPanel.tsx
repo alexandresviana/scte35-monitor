@@ -50,7 +50,7 @@ export function SettingsPanel({ settings, onChange }: SettingsPanelProps) {
             onChange={(e) => update('useCorsProxy', e.target.checked)}
             className="h-4 w-4 rounded border-slate-300"
           />
-          <span>Usar proxy CORS local</span>
+          <span>Usar proxy CORS (/proxy)</span>
         </label>
 
         <label className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-3 text-sm">

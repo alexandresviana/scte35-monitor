@@ -96,6 +96,25 @@ export function formatVariantLabel(variant: VariantInfo, index: number): string 
   return parts.join(' · ');
 }
 
+export function assertValidManifestContent(content: string): void {
+  const trimmed = content.trim();
+
+  if (
+    trimmed.startsWith('<!DOCTYPE') ||
+    trimmed.startsWith('<!doctype') ||
+    trimmed.startsWith('<html') ||
+    trimmed.startsWith('<HTML')
+  ) {
+    throw new Error(
+      'Resposta HTML recebida em vez de manifest HLS. Verifique se o proxy CORS está ativo no deploy (Cloudflare Pages Function em /proxy).'
+    );
+  }
+
+  if (!trimmed.startsWith('#EXTM3U')) {
+    throw new Error('Conteúdo inválido: manifest HLS deve começar com #EXTM3U');
+  }
+}
+
 export async function fetchManifestText(
   url: string,
   useCorsProxy: boolean
@@ -110,6 +129,7 @@ export async function fetchManifestText(
     headers: useCorsProxy ? undefined : { Accept: 'application/vnd.apple.mpegurl, text/plain, */*' },
   });
 
+  assertValidManifestContent(response.data);
   return response.data;
 }
 
